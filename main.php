@@ -16,6 +16,32 @@ $user_data = check_login($con);
 date_default_timezone_set('America/Los_Angeles');
 $date = date('Y-m-d h:i:s', time());
 echo "$date";
+
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
+	$users_json = file_get_contents('init.json');
+	$decoded_json = json_decode($users_json, true);
+	$users = $decoded_json['tuples'];
+
+	mysqli_query($con, "DELETE FROM user");
+
+	foreach($users as $user) {
+		$username = $user['username'];
+		$password = $user['password'];
+		$firstName = $user['firstName'];
+		$lastName = $user['lastName'];
+		$email = $user['email'];
+
+		$salted = "dfjhg584967y98ehg75498y" . $password . "fdsjghiuo54jyi";
+		$hashed = hash('sha512', $salted);
+		$query = "insert into user (username,password,firstName,lastName,email) values ('$username','$hashed','$firstName','$lastName','$email')";
+		//save into db
+		mysqli_query($con, $query);
+
+	}
+	echo "Database reinitialized";
+	die;
+}
+
 ?>
 
 <html lang="en">
@@ -32,9 +58,12 @@ echo "$date";
 	<a href="logout.php">Logout</a>
 	<h2>Home Page</h2>
 	<br><br>
-	<div class="p-5">
-		hello
-	</div>
+
+	<form method="POST">
+		<input type="submit" name="init" value="Initialize Database">
+	</form>
+	
+
 </body>
 
 </html>

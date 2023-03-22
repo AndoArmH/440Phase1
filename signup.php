@@ -23,29 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 	if (!empty($username) && !empty($password) && !empty($firstName) && !empty($lastName) && !empty($email)) {
 
-		$unResult = mysqli_query($con, "SELECT username FROM user");
-
-		while ($row = mysqli_fetch_assoc($unResult)) {
-			foreach ($row as $value) {
-				if (strpos($value, $username) !== false) {
-					echo "Username taken";
-					exit; // Stop looping through values once we find a match
-				}
-			}
+		$unResult = mysqli_query($con, "SELECT username FROM user WHERE username='$username'");
+		if (mysqli_num_rows($unResult) > 0) {
+			echo "Username taken.";
+			exit;
 		}
 
-		$emResult = mysqli_query($con, "SELECT email FROM user");
-
-		while ($row = mysqli_fetch_assoc($emResult)) {
-			foreach ($row as $value) {
-				if (strpos($value, $email) !== false) {
-					echo "Email already in use";
-					exit; // Stop looping through values once we find a match
-				}
-			}
+		$emResult = mysqli_query($con, "SELECT email FROM user WHERE email='$email'");
+		if (mysqli_num_rows($emResult) > 0) {
+			echo "Email already in use.";
+			exit;
 		}
-
-
 
 		//save to db
 		$salted = "dfjhg584967y98ehg75498y" . $password . "fdsjghiuo54jyi";
@@ -85,6 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			<label for="username">Username:</label>
 			<input type="text" name="username"><br><br>
 
+			<p id="badUsername" style="color:red;"></p>
+
 			<label for="password">Password:</label>
 			<input type="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*?[#?!@$%^&*-\]\[]).{8,}"
 				title="The password must be 8 characters, at least one letter, one number, and one special character."><br><br>
@@ -105,11 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 			<label for="email">email:</label>
 			<input type="text" name="email"><br><br>
 
+			<p id="badEmail" style="color:red;"></p>
 
 			<input type="submit" value="Sign Up"><br><br>
 
 			<a href="login.php">Already have an account? Log in</a><br><br>
-
 
 		</form>
 

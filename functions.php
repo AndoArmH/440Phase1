@@ -18,4 +18,14 @@ function check_login($con)
 	//redirect to login if fails 
 	header("Location: login.php");
 	die;
-}//close check_login
+} //close check_login
+
+function checkUsernameEmailExist($username, $email, $con)
+{
+	$query = "SELECT * FROM user WHERE username='$username' OR email='$email'";
+	$result = mysqli_query($con, $query);
+	if (mysqli_num_rows($result) > 0) {
+		echo "Username or email already exists.";
+		return 1;
+	}
+}
