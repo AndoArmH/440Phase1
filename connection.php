@@ -5,7 +5,7 @@ $dbuser = "root";
 $dbpass = "";
 $dbname = "440";
 
-// $dbhost = "frpro2.fcomet.com"; // cpanel Shared IP Address
+// $dbhost = "frpro2.fcomet.com";
 // $dbuser = "auraxium_440group";
 // $dbpass = "im696fz3OG2g";
 // $dbname = "auraxium_440";
